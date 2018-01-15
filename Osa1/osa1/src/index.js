@@ -9,9 +9,15 @@ const Otsikko = (props) => {
 
 const Sisalto = (props) => {
     let lista = props.tehtavat.map(function (item) {
-        return <p key={item.id.toString()}>{item.osa} {item.tehtavia}</p>
+        return <Osa osa={item}/>
     })
     return lista
+}
+
+const Osa = (props) => {
+    return (
+        <p>{props.osa.osa} {props.osa.tehtavia}</p>
+    )
 }
 
 const Yhteensa = (props) => {
