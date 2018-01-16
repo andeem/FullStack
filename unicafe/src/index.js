@@ -21,7 +21,6 @@ class App extends React.Component {
             } else if (tyyppi === -1) {
                 this.setState({ huono: this.state.huono + 1 })
             }
-            console.log(this.state)
         }
 
     }
@@ -38,7 +37,9 @@ class App extends React.Component {
                     <p>
                         hyvä: {this.state.hyva}<br/>
                         neutraali: {this.state.neutraali}<br/>
-                        huono: {this.state.huono}
+                        huono: {this.state.huono}<br/>
+                        keskiarvo: {(this.state.hyva - this.state.huono) / (this.state.hyva +this.state.huono + this.state.neutraali)}<br/>
+                        positiivisia: {this.state.hyva / (this.state.hyva +this.state.huono + this.state.neutraali) * 100} %
                     </p>
                 </div>
             </div>
