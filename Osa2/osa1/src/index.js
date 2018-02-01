@@ -9,12 +9,12 @@ const Otsikko = (props) => {
 
 const Sisalto = (props) => {
     let lista = props.kurssi.osat.map(item => <Osa key={item.id} osa={item} />)
-        return lista
+    return lista
 }
 
 const Osa = (props) => {
     return (
-        <p>{props.osa.osa} {props.osa.tehtavia}</p>
+        <p>{props.osa.nimi} {props.osa.tehtavia}</p>
     )
 }
 
@@ -36,31 +36,55 @@ const Kurssi = (props) => {
     )
 }
 
-const App = () => {
-    const kurssi = {
-        nimi: 'Half Stack -sovelluskehitys',
-        osat: [
-            {
-                id: 1,
-                osa: "Reactin perusteet",
-                tehtavia: 10
-            },
-            {
-                id: 2,
-                osa: "Tiedonvälitys propseilla",
-                tehtavia: 7
-            },
-            {
-                id: 3,
-                osa: "Komponenttien tila",
-                tehtavia: 14
-            }
+const Kurssit = (props) => {
+    let lista = props.kurssit.map(kurssi => <Kurssi key={kurssi.id} kurssi={kurssi} />)
+    return lista
+}
 
-        ]
-    }
+const App = () => {
+    const kurssit = [
+        {
+            nimi: 'Half Stack -sovelluskehitys',
+            id: 1,
+            osat: [
+                {
+                    nimi: 'Reactin perusteet',
+                    tehtavia: 10,
+                    id: 1
+                },
+                {
+                    nimi: 'Tiedonvälitys propseilla',
+                    tehtavia: 7,
+                    id: 2
+                },
+                {
+                    nimi: 'Komponenttien tila',
+                    tehtavia: 14,
+                    id: 3
+                }
+            ]
+        },
+        {
+            nimi: 'Node.js',
+            id: 2,
+            osat: [
+                {
+                    nimi: 'Routing',
+                    tehtavia: 3,
+                    id: 1
+                },
+                {
+                    nimi: 'Middlewaret',
+                    tehtavia: 7,
+                    id: 2
+                }
+            ]
+        }
+    ]
     return (
         <div>
-            <Kurssi kurssi={kurssi} />
+            <h1>Opetusohjelma</h1>
+            <Kurssit kurssit={kurssit} />
         </div>
     )
 }
