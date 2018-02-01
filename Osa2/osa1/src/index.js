@@ -19,10 +19,7 @@ const Osa = (props) => {
 }
 
 const Yhteensa = (props) => {
-    let maara = 0
-    for (let i = 0; i < props.kurssi.osat.length; i++) {
-        maara += props.kurssi.osat[i].tehtavia
-    }
+    let maara = props.kurssi.osat.reduce(((lkm, osa) => lkm + osa.tehtavia), 0)
     return (
         <p>Yhteensä {maara} tehtävää</p>
 
