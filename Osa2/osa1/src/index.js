@@ -8,8 +8,8 @@ const Otsikko = (props) => {
 }
 
 const Sisalto = (props) => {
-    let lista = props.kurssi.osat.map(item => <Osa osa={item} />)
-    return lista
+    let lista = props.kurssi.osat.map(item => <Osa key={item.id} osa={item} />)
+        return lista
 }
 
 const Osa = (props) => {
@@ -34,6 +34,7 @@ const Kurssi = (props) => {
         <div>
             <Otsikko kurssi={props.kurssi} />
             <Sisalto kurssi={props.kurssi} />
+            <Yhteensa kurssi={props.kurssi} />
         </div>
     )
 }
