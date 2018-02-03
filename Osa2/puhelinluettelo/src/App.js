@@ -1,5 +1,6 @@
 import React from 'react';
 import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
 
 
 class App extends React.Component {
@@ -56,33 +57,13 @@ class App extends React.Component {
           <br />
           <br />
         </div>
-        <form onSubmit={this.addName}>
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    nimi:
-                  </td>
-                  <td>
-                    <input value={this.state.newName} onChange={this.nameChanged} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    numero:
-                  </td>
-                  <td>
-                    <input value={this.state.newNumber} onChange={this.numberChanged} />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
+        <PersonForm
+          name = {this.state.newName}
+          number = {this.state.newNumber}
+          addName = {this.addName}
+          nameChanged = {this.nameChanged}
+          numberChanged = {this.numberChanged}
+        />
         <h2>Numerot</h2>
         <Persons persons={this.state.persons.filter(person => person.name.toLowerCase().match(this.state.filter.toLowerCase()))} />
       </div>
