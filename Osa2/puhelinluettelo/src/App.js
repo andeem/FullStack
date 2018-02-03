@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 
@@ -7,19 +8,21 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { name: 'Arto Hellas', number: '040-123456' },
-        { name: 'Martti Tienari', number: '040-123456' },
-        { name: 'Arto Järvinen', number: '040-123456' },
-        { name: 'Lea Kutvonen', number: '040-123456' }
-      ],
+      persons: [],
       newName: '',
       newNumber: '',
       filter: ''
     }
   }
 
-
+  componentDidMount = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response =>  {
+        console.log(response)
+        this.setState({persons: response.data})
+      })
+  }
 
   addName = (event) => {
     event.preventDefault()
@@ -44,7 +47,7 @@ class App extends React.Component {
   }
 
   filterChanged = (event) => {
-    this.setState({filter: event.target.value})
+    this.setState({ filter: event.target.value })
   }
 
   render() {
@@ -58,11 +61,11 @@ class App extends React.Component {
           <br />
         </div>
         <PersonForm
-          name = {this.state.newName}
-          number = {this.state.newNumber}
-          addName = {this.addName}
-          nameChanged = {this.nameChanged}
-          numberChanged = {this.numberChanged}
+          name={this.state.newName}
+          number={this.state.newNumber}
+          addName={this.addName}
+          nameChanged={this.nameChanged}
+          numberChanged={this.numberChanged}
         />
         <h2>Numerot</h2>
         <Persons persons={this.state.persons.filter(person => person.name.toLowerCase().match(this.state.filter.toLowerCase()))} />
