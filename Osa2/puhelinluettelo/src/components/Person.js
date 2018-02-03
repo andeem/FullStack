@@ -3,7 +3,7 @@ import React from 'react'
 const Person = (props) =>
     <tr>
         <td>
-        {props.person.name}
+            {props.person.name}
         </td>
         <td>
             {props.person.number}
