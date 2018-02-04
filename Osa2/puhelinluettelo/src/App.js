@@ -18,9 +18,9 @@ class App extends React.Component {
   componentDidMount = () => {
     axios
       .get('http://localhost:3001/persons')
-      .then(response =>  {
+      .then(response => {
         console.log(response)
-        this.setState({persons: response.data})
+        this.setState({ persons: response.data })
       })
   }
 
@@ -30,6 +30,9 @@ class App extends React.Component {
       name: this.state.newName,
       number: this.state.newNumber
     }
+    this.state.persons.some(person => person.name === personObject.name) ? (() => {}) : axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => console.log(response))
     const persons = this.state.persons.some(person => person.name === personObject.name) ? this.state.persons : this.state.persons.concat(personObject)
     this.setState({
       persons,
