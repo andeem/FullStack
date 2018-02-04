@@ -22,6 +22,7 @@ class App extends Component {
     this.setState({filter: event.target.value})
   }
 
+
   render() {
     return (
       <div>
