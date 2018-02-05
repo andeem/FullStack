@@ -1,7 +1,7 @@
 import React from 'react';
-import axios from 'axios'
 import Persons from './components/Persons'
-import PersonForm from './components/PersonForm'
+import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 class App extends React.Component {
@@ -11,17 +11,15 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      notification: null
     }
   }
 
   componentDidMount = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response)
-        this.setState({ persons: response.data })
-      })
+    personService
+      .getAll()
+      .then(response => { this.setState({ persons: response }) })
   }
 
   addName = (event) => {
@@ -30,15 +28,46 @@ class App extends React.Component {
       name: this.state.newName,
       number: this.state.newNumber
     }
-    this.state.persons.some(person => person.name === personObject.name) ? (() => {}) : axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => console.log(response))
-    const persons = this.state.persons.some(person => person.name === personObject.name) ? this.state.persons : this.state.persons.concat(personObject)
-    this.setState({
-      persons,
-      newName: '',
-      newNumber: ''
-    })
+
+    if (!this.state.persons.some(person => person.name === personObject.name)) {
+      personService
+        .create(personObject)
+        .then(response => {
+          this.setState({
+            persons: this.state.persons.concat(response),
+            newName: '',
+            newNumber: '',
+            notification: 'Uusi henkilö lisätty onnistuneesti'
+          })
+          setTimeout(() => {
+            this.setState({ notification: null })
+          }, 5000)
+        })
+    } else {
+      console.log('wtf')
+      const oldPerson = this.state.persons.find(person => person.name === personObject.name)
+      const updatedPerson = { ...oldPerson, number: personObject.number }
+
+      personService.update(updatedPerson)
+        .then(response => {
+          this.setState({
+            persons: this.state.persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson),
+            newName: '',
+            newNumber: '',
+            notification: 'Numero päivitetty'
+          })
+          setTimeout(() => {
+            this.setState({ notification: null })
+          }, 5000)
+        })
+        .catch(error => {
+          alert(`Henkilö '${updatedPerson.name}' on jo valitettavasti poistettu`)
+          this.setState({
+            persons: this.state.persons.filter(person => person.id !== updatedPerson.id)
+          })
+        })
+      console.log(updatedPerson)
+    }
   }
 
   nameChanged = (event) => {
@@ -53,25 +82,63 @@ class App extends React.Component {
     this.setState({ filter: event.target.value })
   }
 
+  onPoistoClick = (person) => {
+    return () => {
+      personService.deletePerson(person)
+      this.state.persons.splice(this.state.persons.indexOf(person), 1)
+      this.setState({
+        persons: this.state.persons,
+        notification: 'Numero poistettu'
+      })
+      setTimeout(() => {
+        this.setState({notification: null})
+      }, 5000)
+    }
+  }
+
   render() {
     return (
       <div>
         <h2>Puhelinluettelo</h2>
+        <Notification message={this.state.notification} />
         <div>
           rajaa näytettäviä:
           <input value={this.state.filter} onChange={this.filterChanged} />
           <br />
           <br />
         </div>
-        <PersonForm
-          name={this.state.newName}
-          number={this.state.newNumber}
-          addName={this.addName}
-          nameChanged={this.nameChanged}
-          numberChanged={this.numberChanged}
-        />
+        <form onSubmit={this.addName}>
+          <div>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    nimi:
+                  </td>
+                  <td>
+                    <input value={this.state.newName} onChange={this.nameChanged} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    numero:
+                  </td>
+                  <td>
+                    <input value={this.state.newNumber} onChange={this.numberChanged} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <button type="submit">lisää</button>
+          </div>
+        </form>
         <h2>Numerot</h2>
-        <Persons persons={this.state.persons.filter(person => person.name.toLowerCase().match(this.state.filter.toLowerCase()))} />
+        <Persons persons={this.state.persons
+          .filter(person => person.name.toLowerCase().match(this.state.filter.toLowerCase()))}
+          onPoistoClick={this.onPoistoClick}
+        />
       </div>
     )
   }

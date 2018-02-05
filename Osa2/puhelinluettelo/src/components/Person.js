@@ -8,6 +8,9 @@ const Person = (props) =>
         <td>
             {props.person.number}
         </td>
+        <td>
+            <button onClick={props.onPoistoClick(props.person)}>Poista</button>
+        </td>
     </tr>
 
 export default Person
