@@ -8,26 +8,30 @@ class App extends Component {
     super()
     this.state = {
       countries: [],
-      filter: 'Aus'
+      filter: ''
     }
   }
 
   componentDidMount() {
     axios
       .get('https://restcountries.eu/rest/v2/all')
-      .then(response => { this.setState({countries: response.data}) })
+      .then(response => { this.setState({ countries: response.data }) })
   }
 
   searchValueChanged = (event) => {
-    this.setState({filter: event.target.value})
+    this.setState({ filter: event.target.value })
+  }
+
+  click = (country) => {
+    return () => this.setState({ filter: country.name })
   }
 
 
   render() {
     return (
       <div>
-        <Search filter={this.state.filter} onChange={this.searchValueChanged}/>
-        <Countries countries={this.state.countries} filter={this.state.filter}/>
+        <Search filter={this.state.filter} onChange={this.searchValueChanged} />
+        <Countries countries={this.state.countries} filter={this.state.filter} click={this.click} />
       </div>
     )
   }
